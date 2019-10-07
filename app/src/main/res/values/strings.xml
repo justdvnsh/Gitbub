@@ -2,4 +2,5 @@
     <string name="app_name">gitbub</string>
     <string name="action_settings">Settings</string>
     <string name="search">Search</string>
+    <string name="error_message">Failed to load the results . Please Try again :( </string>
 </resources>

@@ -29,18 +29,39 @@
         android:layout_marginTop="8dp"
         android:text="Your queries show up here."/>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp">
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/search_results"
+            android:id="@+id/error_message"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Search Results"
-            android:textSize="18sp"/>
+            android:text="@string/error_message"
+            android:textSize="22sp"
+            android:padding="16dp"
+            android:visibility="invisible"/>
 
-    </ScrollView>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                android:id="@+id/search_results"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Search Results"
+                android:textSize="18sp"/>
+
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+    </FrameLayout>
 
 </LinearLayout>

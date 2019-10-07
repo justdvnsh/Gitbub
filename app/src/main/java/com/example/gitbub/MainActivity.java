@@ -1,6 +1,7 @@
 package com.example.gitbub;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     TextView urlDisplay;
     TextView searchResults;
+    TextView errorMessage;
+    ProgressBar progressBar;
     final static String GITHUB_BASE_URL = "https://api.github.com/search/repositories";
     final static String PARAM_QUERY = "q";
     final static String PARAM_SORT = "sort";
@@ -59,14 +63,7 @@ public class MainActivity extends AppCompatActivity {
         urlDisplay.setText(String.valueOf(url));
 
         String results = null;
-        try {
-
-            results = getResponseFromHttpUrl(url);
-            searchResults.setText(results);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new DownloadManager().execute(url);
 
     }
 
@@ -97,6 +94,53 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public class DownloadManager extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+
+            URL url = urls[0];
+            String results = null;
+            try {
+
+                results = getResponseFromHttpUrl(url);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return results;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressBar.setVisibility(View.INVISIBLE);
+            if ( s != null && !s.equals("") ) {
+                showJSONdata();
+                searchResults.setText(s);
+            } else {
+                showErrorMessage();
+            }
+        }
+    }
+
+    public void showJSONdata() {
+        searchResults.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility(View.INVISIBLE);
+    }
+
+    public void showErrorMessage() {
+        searchResults.setVisibility(View.INVISIBLE);
+        errorMessage.setVisibility(View.VISIBLE);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.edit_text);
         urlDisplay = (TextView) findViewById(R.id.url_display);
         searchResults = (TextView) findViewById(R.id.search_results);
+        errorMessage  = (TextView) findViewById(R.id.error_message);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
     }
 
