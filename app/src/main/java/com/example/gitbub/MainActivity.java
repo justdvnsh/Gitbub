@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     final static String PARAM_QUERY = "q";
     final static String PARAM_SORT = "sort";
 
+    final static String SEARCH_QUERY = "results";
+    final static String RAW_JSON_RESULTS = "json";
+
     public URL buildUri(String text) {
 
         Uri builtUri = Uri.parse(GITHUB_BASE_URL).buildUpon().appendQueryParameter(PARAM_QUERY, text)
@@ -154,6 +157,27 @@ public class MainActivity extends AppCompatActivity {
         errorMessage  = (TextView) findViewById(R.id.error_message);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
+
+        if ( savedInstanceState != null ) {
+            String url = savedInstanceState.getString(SEARCH_QUERY);
+            String results = savedInstanceState.getString(RAW_JSON_RESULTS);
+
+            urlDisplay.setText(url);
+            searchResults.setText(results);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        String search = urlDisplay.getText().toString();
+
+        outState.putString(SEARCH_QUERY, search);
+
+        String results = searchResults.getText().toString();
+
+        outState.putString(RAW_JSON_RESULTS, results);
     }
 
     @Override
